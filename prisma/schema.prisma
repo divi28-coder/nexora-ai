@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  name String?
+  passwordHash String
+  role String @default("USER")
+  headline String?
+  targetRole String?
+  experienceLevel String?
+  language String @default("en")
+  theme String @default("dark")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  resumes Resume[]
+  conversations AssistantConversation[]
+  interviews InterviewSession[]
+  roadmaps CareerRoadmap[]
+  jobAnalyses JobAnalysis[]
+  skills UserSkillEvidence[]
+  notifications Notification[]
+  activity ActivityHistory[]
+  consents ConsentRecord[]
+}
+model Resume {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String
+  originalFileKey String?
+  isActive Boolean @default(false)
+  createdAt DateTime @default(now())
+  versions ResumeVersion[]
+  @@index([userId])
+}
+model ResumeVersion {
+  id String @id @default(cuid())
+  resumeId String
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  version Int
+  content Json
+  analysis Json?
+  createdAt DateTime @default(now())
+  @@unique([resumeId, version])
+}
+model Skill {
+  id String @id @default(cuid())
+  name String @unique
+  category String?
+  evidence UserSkillEvidence[]
+}
+model UserSkillEvidence {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillId String
+  skill Skill @relation(fields: [skillId], references: [id])
+  level String // DECLARED | RESUME_SUPPORTED | CHALLENGE_DEMONSTRATED | EXTERNALLY_VERIFIED
+  note String?
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model JobAnalysis {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String
+  description String
+  result Json
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model InterviewSession {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode String // TEXT | VOICE | VIDEO
+  category String
+  role String
+  status String @default("CREATED")
+  saveTranscriptConsent Boolean @default(false)
+  createdAt DateTime @default(now())
+  answers InterviewAnswer[]
+  @@index([userId])
+}
+model InterviewAnswer {
+  id String @id @default(cuid())
+  sessionId String
+  session InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question String
+  answer String
+  feedback Json?
+  createdAt DateTime @default(now())
+}
+model AssistantConversation {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String
+  createdAt DateTime @default(now())
+  messages AssistantMessage[]
+  @@index([userId])
+}
+model AssistantMessage {
+  id String @id @default(cuid())
+  conversationId String
+  conversation AssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role String
+  content String
+  createdAt DateTime @default(now())
+}
+model CareerRoadmap {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetRole String
+  createdAt DateTime @default(now())
+  tasks RoadmapTask[]
+  @@index([userId])
+}
+model RoadmapTask {
+  id String @id @default(cuid())
+  roadmapId String
+  roadmap CareerRoadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  week Int
+  title String
+  deliverable String?
+  done Boolean @default(false)
+  notes String?
+  priority String @default("MEDIUM")
+  dueDate DateTime?
+  hours Int?
+  skill String?
+}
+model Notification {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message String
+  read Boolean @default(false)
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model ActivityHistory {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type String
+  detail String
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model ConsentRecord {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind String
+  granted Boolean
+  createdAt DateTime @default(now())
+  @@index([userId])
+}

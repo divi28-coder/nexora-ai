@@ -1,0 +1,41 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+
+# Environment variables and secrets
+
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Build and debug files
+
+*.tsbuildinfo
+*.log
+
+# Certificates and private keys
+
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local databases and backups
+
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.bak
+
+# Deployment tools
+
+.vercel/
+
+# Local backup files
+*.backup
+*.backup.txt
