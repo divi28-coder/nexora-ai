@@ -1,9 +1,39 @@
-import Link from "next/link";
-export default function Home(){return(<main className="mx-auto max-w-5xl px-6 py-20">
-<h1 className="text-5xl font-bold leading-tight">Your Next Interview Starts Here.</h1>
-<p className="mt-5 max-w-xl text-lg" style={{color:"var(--muted)"}}>Understand your strengths, improve your resume, and practice with an AI recruiter before your next real interview.</p>
-<div className="mt-8 flex flex-wrap gap-3">
-<Link href="/assistant" className="rounded-xl bg-violet px-5 py-3 font-semibold">Meet Your AI Career Coach</Link>
-<Link href="/interview-studio" className="rounded-xl border border-cyan px-5 py-3">Try a Mock Interview</Link>
-<Link href="/demo" className="rounded-xl border border-emerald px-5 py-3">Analyze My Resume</Link></div>
-<p className="mt-10 text-sm" style={{color:"var(--muted)"}}>Demo mode uses sample data. Scores are estimates and do not predict hiring outcomes.</p></main>)}
+import Link from 'next/link';
+
+export default function Home() {
+  return (
+    <main className="landing-shell mx-auto px-6 py-6 md:px-10">
+      <nav className="landing-topbar" aria-label="Main">
+        <Link href="/" className="landing-brand">
+          <span className="app-brand-mark">N</span>
+          <span>NEXORA AI</span>
+        </Link>
+        <Link href="/login" className="landing-signin">Sign in <span aria-hidden="true">↗</span></Link>
+      </nav>
+
+      <section className="landing-hero">
+        <div className="landing-copy">
+          <span className="landing-kicker"><span className="app-status-dot" /> YOUR CAREER, IN FOCUS</span>
+          <h1>Your next chapter starts <span>with you.</span></h1>
+          <p>
+            Build confidence for what comes next. Understand your strengths,
+            make your resume stand out, and practice for interviews in one
+            thoughtful career workspace.
+          </p>
+          <div className="landing-actions">
+            <Link href="/signup">Create your workspace <span aria-hidden="true">→</span></Link>
+            <Link href="/demo">Explore resume tools</Link>
+          </div>
+          <p className="landing-disclaimer">Guidance for your journey. Your experience and decisions always come first.</p>
+        </div>
+
+        <div className="landing-visual" aria-hidden="true">
+          <div className="landing-visual-orbit" />
+          <span className="landing-visual-core">N</span>
+          <div className="landing-float-card landing-float-one"><strong>Resume insights</strong><span>See your strengths clearly</span></div>
+          <div className="landing-float-card landing-float-two"><strong>Practice with purpose</strong><span>Take your next step confidently</span></div>
+        </div>
+      </section>
+    </main>
+  );
+}

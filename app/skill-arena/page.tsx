@@ -11,6 +11,11 @@ type QuizResult = {
   recorded: boolean;
 };
 
+const totalQuestions = Object.values(quizzes).reduce(
+  (total, questions) => total + questions.length,
+  0
+);
+
 export default function SkillArena() {
   const [skill, setSkill] = useState<string | null>(null);
   const [i, setI] = useState(0);
@@ -87,33 +92,31 @@ export default function SkillArena() {
     <>
       <Nav />
 
-      <main className="mx-auto max-w-2xl p-6">
+      <main className="mx-auto max-w-4xl p-6">
         <h1 className="text-3xl font-bold">Skill Arena</h1>
 
         <p
           className="mt-1 text-sm"
           style={{ color: 'var(--muted)' }}
         >
-          Multiple-choice practice. Scoring 70%+ records
-          &quot;challenge-demonstrated&quot; evidence in your Career
-          Twin. No code is executed.
+          Practice {totalQuestions} interview-style questions across{' '}
+          {Object.keys(quizzes).length} career domains. Scoring 70%+ in a
+          domain records &quot;challenge-demonstrated&quot; evidence in your
+          Career Twin. No code is executed.
         </p>
 
         {!skill && (
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {Object.keys(quizzes).map((key) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => startQuiz(key)}
-                className="panel font-semibold"
+                className="panel text-left font-semibold hover:-translate-y-0.5 hover:border-violet-400/50"
               >
-                {key}
-
-                <br />
-
-                <small style={{ color: 'var(--muted)' }}>
-                  {quizzes[key].length} questions
+                <span className="block">{key}</span>
+                <small className="mt-1 block" style={{ color: 'var(--muted)' }}>
+                  {quizzes[key].length} interview questions
                 </small>
               </button>
             ))}
@@ -128,6 +131,20 @@ export default function SkillArena() {
             >
               {skill} · question {i + 1} of {qs.length}
             </p>
+
+            <div
+              className="mt-3 h-2 overflow-hidden rounded-full bg-white/10"
+              role="progressbar"
+              aria-label={`${skill} quiz progress`}
+              aria-valuemin={0}
+              aria-valuemax={qs.length}
+              aria-valuenow={i + 1}
+            >
+              <div
+                className="h-full rounded-full bg-violet transition-all"
+                style={{ width: `${((i + 1) / qs.length) * 100}%` }}
+              />
+            </div>
 
             <p className="mt-1 font-semibold">
               {currentQuestion.q}
